@@ -10,7 +10,9 @@ export default function Portfolio() {
   const { i18n, t } = useTranslation();
   const featuredProjects = content.projects
     .filter((project) => project.featured)
-    .sort((a, b) => a.index.localeCompare(b.index, undefined, { numeric: true }));
+    .sort((a, b) =>
+      a.index.localeCompare(b.index, undefined, { numeric: true }),
+    );
 
   return (
     <>

@@ -61,7 +61,13 @@
         }
       ],
       "markdown": "marktext-ai/marktext-ai.md",
-      "technologies": ["Electron", "Vue 3", "TypeScript", "Pinia", "Markdown"]
+      "technologies": [
+        "Electron",
+        "Vue 3",
+        "TypeScript",
+        "Pinia",
+        "Markdown"
+      ]
     },
     {
       "category": "game",
@@ -76,7 +82,11 @@
         }
       ],
       "markdown": "battle-royal-moba.md",
-      "technologies": ["Godot", "C++", "GDScript"]
+      "technologies": [
+        "Godot",
+        "C++",
+        "GDScript"
+      ]
     },
     {
       "category": "software",
@@ -157,7 +167,13 @@
         }
       ],
       "markdown": "aio-asset-normalizer/aio-asset-normalizer.md",
-      "technologies": ["Rust", "egui", "three-d", "wgpu", "gltf"]
+      "technologies": [
+        "Rust",
+        "egui",
+        "three-d",
+        "wgpu",
+        "gltf"
+      ]
     },
     {
       "category": "deep-learning",

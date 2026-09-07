@@ -26,24 +26,26 @@ export default function TimelinePage() {
         </div>
         <div className="project-archive">
           {[...portfolioData.projects]
-            .sort((a, b) => a.index.localeCompare(b.index, undefined, { numeric: true }))
+            .sort((a, b) =>
+              a.index.localeCompare(b.index, undefined, { numeric: true }),
+            )
             .map((project) => {
-            const text = getProjectText(project, t);
-            return (
-              <ProjectTrigger
-                key={project.id}
-                project={project}
-                title={text.title}
-                description={text.description}
-                categoryLabel={getProjectCategoryLabel(
-                  project.category,
-                  i18n.language,
-                )}
-                technologiesLabel={t('labels.technologies')}
-                closeLabel={t('actions.close')}
-              />
-            );
-          })}
+              const text = getProjectText(project, t);
+              return (
+                <ProjectTrigger
+                  key={project.id}
+                  project={project}
+                  title={text.title}
+                  description={text.description}
+                  categoryLabel={getProjectCategoryLabel(
+                    project.category,
+                    i18n.language,
+                  )}
+                  technologiesLabel={t('labels.technologies')}
+                  closeLabel={t('actions.close')}
+                />
+              );
+            })}
         </div>
       </section>
 

@@ -34,14 +34,6 @@ export default function ContactPage() {
           >
             {t('contact.linkedin')} ↗
           </a>
-          <a
-            className="ink-link"
-            href={portfolioData.person.socials.website}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t('contact.website')} ↗
-          </a>
         </div>
       </section>
 

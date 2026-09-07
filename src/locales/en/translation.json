@@ -20,8 +20,7 @@
     "email": "Email",
     "github": "GitHub",
     "introduction": "For a project, a co-op opportunity, or a thoughtful conversation, the best place to find me is email.",
-    "linkedin": "LinkedIn",
-    "website": "Personal Website"
+    "linkedin": "LinkedIn"
   },
   "education": {
     "coursework": {
@@ -89,15 +88,6 @@
       ],
       "title": "AIO Asset Normalizer"
     },
-    "marktext-ai": {
-      "description": "A desktop Markdown editor based on a fork of MarkText that brings Agent collaboration directly into the writing workflow. It preserves MarkText's lightweight editing experience and adds conversation, local modifications, full-document rewriting, and multimodal input.",
-      "fullProjectHighlights": [
-        "Three Agent working modes: Answer, Edit, and Rewrite",
-        "Document-oriented continuous conversation",
-        "Image and PDF multimodal input"
-      ],
-      "title": "MarkText Agent"
-    },
     "battle-royal-moba": {
       "description": "A top-down 2.5D MOBA game built around a clear separation between authoritative gameplay simulation and real-time presentation. The project explores how a MOBA-style command model, hero combat, bot behavior pathfinding.",
       "fullProjectHighlights": [
@@ -127,6 +117,15 @@
     "license-plate-recognition": {
       "description": "An Ontario-style license plate recognition system trained with PyTorch, combining a CNN bounding-box layer and a CRNN character-recognition layer.",
       "title": "License Plate Recognition System"
+    },
+    "marktext-ai": {
+      "description": "A desktop Markdown editor based on a fork of MarkText that brings Agent collaboration directly into the writing workflow. It preserves MarkText's lightweight editing experience and adds conversation, local modifications, full-document rewriting, and multimodal input.",
+      "fullProjectHighlights": [
+        "Three Agent working modes: Answer, Edit, and Rewrite",
+        "Document-oriented continuous conversation",
+        "Image and PDF multimodal input"
+      ],
+      "title": "MarkText Agent"
     },
     "runner-game": {
       "description": "An embedded systems project featuring a runner game implemented on a RISC-V processor with custom graphics and input handling.",

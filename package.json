@@ -7,11 +7,9 @@
     "build": "vite build",
     "clean": "rm -rf dist",
     "dev": "vite",
-    "format-prettier": "prettier --write .",
+    "format": "prettier --write .",
     "preinstall": "npx only-allow pnpm",
-    "preview": "vite preview",
-    "sort-json": "jsonsort src/**/*.json",
-    "format": "pnpm sort-json && pnpm format-prettier"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
