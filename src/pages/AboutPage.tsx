@@ -10,6 +10,24 @@ export default function AboutPage() {
         <p className="section-kicker">03 / {t('sections.about')}</p>
         <h1 className="page-title">{t('pages.about.title')}</h1>
         <p className="body-copy page-lede">{t('pages.about.introduction')}</p>
+        <div className="resume-links">
+          {(
+            Object.keys(portfolioData.person.resume) as Array<
+              keyof typeof portfolioData.person.resume
+            >
+          ).map((language) => (
+            <a
+              className="ink-link"
+              href={portfolioData.person.resume[language]}
+              key={language}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t(`pages.about.resume.${language}`)}{' '}
+              <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
       </section>
 
       <section className="section-block about-grid">

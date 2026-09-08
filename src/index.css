@@ -714,6 +714,7 @@ html[data-locale='zh'] .project-detail-page {
 }
 
 .hero-actions,
+.resume-links,
 .contact-links {
   display: flex;
   flex-wrap: wrap;
@@ -723,6 +724,10 @@ html[data-locale='zh'] .project-detail-page {
 
 .hero-actions {
   margin-top: 2.5rem;
+}
+
+.resume-links {
+  margin-top: 2rem;
 }
 
 .ink-link {

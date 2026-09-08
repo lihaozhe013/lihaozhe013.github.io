@@ -67,6 +67,10 @@
   "pages": {
     "about": {
       "introduction": "Computer Engineering student working across software, video games, and interactive projects. I like understanding why something feels intuitive, where complexity hides, and what happens when people do things differently from how it was imagined.\nAway from code: films, music, fiction, games, and esports.",
+      "resume": {
+        "english": "英文简历",
+        "chinese": "中文简历"
+      },
       "title": "关于我"
     },
     "contact": {
@@ -159,8 +163,9 @@
     "title": "Haozhe Li — Portfolio"
   },
   "skillGroups": {
+    "hardware-and-simulation": "硬件 / 仿真",
     "languages": "Languages",
-    "tools": "Tools & design",
-    "web-and-infrastructure": "Web & infrastructure"
+    "software-and-3d": "软件 / 3D",
+    "web-and-infrastructure": "Web / 基础设施"
   }
 }

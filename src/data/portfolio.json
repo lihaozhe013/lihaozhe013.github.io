@@ -14,6 +14,10 @@
   },
   "person": {
     "name": "Haozhe Li",
+    "resume": {
+      "english": "https://drive.notionsobad.fyi/resume_en.pdf",
+      "chinese": "https://drive.notionsobad.fyi/resume_cn.pdf"
+    },
     "socials": {
       "email": "mailto:lihaozhe013@gmail.com",
       "github": "https://github.com/lihaozhe013",
@@ -270,7 +274,7 @@
       ]
     },
     {
-      "id": "tools",
+      "id": "software-and-3d",
       "items": [
         "Git",
         "Bash",
@@ -279,15 +283,20 @@
         "Godot",
         "Unity Engine",
         "Makefile",
+        "Figma",
+        "Notion"
+      ]
+    },
+    {
+      "id": "hardware-and-simulation",
+      "items": [
         "STM32CubeIDE",
         "Quartus Prime",
         "ModelSim",
         "DESim",
         "Simulink",
         "MATLAB",
-        "CPULator",
-        "Figma",
-        "Notion"
+        "CPULator"
       ]
     },
     {

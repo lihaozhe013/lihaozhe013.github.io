@@ -31,6 +31,10 @@ export interface SkillGroup {
 export interface PortfolioData {
   person: {
     name: string;
+    resume: {
+      chinese: string;
+      english: string;
+    };
     socials: {
       github: string;
       linkedin: string;
