@@ -122,14 +122,14 @@
       "description": "An Ontario-style license plate recognition system trained with PyTorch, combining a CNN bounding-box layer and a CRNN character-recognition layer.",
       "title": "License Plate Recognition System"
     },
-    "marktext-ai": {
-      "description": "基于 MarkText 分支的桌面 Markdown 编辑器，将 Agent 协作融入写作流程。保留 MarkText 轻量编辑体验的同时，新增对话、局部修改、全文重写与多模态输入能力。",
+    "docmost": {
+      "description": "一个面向个人与小型可信团队的 Docmost 私有化分支，保留实时协作能力，加入管理员账号管理与可直接修改当前页面的 AI 编辑 Agent。",
       "fullProjectHighlights": [
-        "三种 Agent 工作模式：问答、编辑、重写",
-        "围绕文档的连续对话",
-        "图片与 PDF 多模态输入"
+        "面向私有部署的小型协作工作区",
+        "管理员创建账号与重置密码，无需 SMTP",
+        "基于 Responses API 的对话式页面编辑 Agent"
       ],
-      "title": "MarkText Agent"
+      "title": "Docmost 私人分支"
     },
     "runner-game": {
       "description": "An embedded systems project featuring a runner game implemented on a RISC-V processor with custom graphics and input handling.",

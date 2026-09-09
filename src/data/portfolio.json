@@ -55,22 +55,27 @@
     {
       "category": "software",
       "featured": true,
-      "id": "marktext-ai",
+      "id": "docmost",
       "index": "03",
       "links": [
         {
-          "href": "https://github.com/lihaozhe013/marktext-ai",
+          "href": "https://github.com/lihaozhe013/docmost",
           "label": "GitHub",
           "type": "github"
         }
       ],
-      "markdown": "marktext-ai/marktext-ai.md",
+      "markdown": "docmost/docmost.md",
       "technologies": [
-        "Electron",
-        "Vue 3",
         "TypeScript",
-        "Pinia",
-        "Markdown"
+        "React",
+        "NestJS",
+        "Tiptap",
+        "Yjs",
+        "Hocuspocus",
+        "PostgreSQL",
+        "Redis",
+        "Docker",
+        "OpenAI Responses API"
       ]
     },
     {
@@ -86,11 +91,7 @@
         }
       ],
       "markdown": "battle-royal-moba.md",
-      "technologies": [
-        "Godot",
-        "C++",
-        "GDScript"
-      ]
+      "technologies": ["Godot", "C++", "GDScript"]
     },
     {
       "category": "software",
@@ -171,13 +172,7 @@
         }
       ],
       "markdown": "aio-asset-normalizer/aio-asset-normalizer.md",
-      "technologies": [
-        "Rust",
-        "egui",
-        "three-d",
-        "wgpu",
-        "gltf"
-      ]
+      "technologies": ["Rust", "egui", "three-d", "wgpu", "gltf"]
     },
     {
       "category": "deep-learning",
