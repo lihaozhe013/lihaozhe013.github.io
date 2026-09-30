@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import avatarImage from '@/assets/photo.jpg';
 import ProjectTrigger, { getProjectText } from '@/components/ProjectTrigger';
 import { getProjectCategoryLabel, portfolioData } from '@/data/portfolio';
 import type { PortfolioData } from '@/types/content';
@@ -16,10 +15,16 @@ export default function Portfolio() {
 
   return (
     <>
-      <section className="hero-section" id="index">
+      <section
+        className="hero-section editorial-cover"
+        id="cover"
+        aria-labelledby="hero-title"
+      >
         <div className="hero-copy">
           <p className="section-kicker">{t('hero.eyebrow')}</p>
-          <h1 className="display-title">{content.person.name}</h1>
+          <h1 className="display-title" id="hero-title">
+            {content.person.name}
+          </h1>
           <p className="hero-headline">{t('hero.headline')}</p>
           <p className="body-copy hero-introduction">
             {t('hero.introduction')}
@@ -33,13 +38,9 @@ export default function Portfolio() {
             </a>
           </div>
         </div>
-        <figure className="portrait-figure">
-          <img src={avatarImage} alt={content.person.name} />
-          <figcaption>
-            <span>{t('hero.availability')}</span>
-            <span>{t('hero.portraitCaption')}</span>
-          </figcaption>
-        </figure>
+        <span className="cover-index" aria-hidden="true">
+          01
+        </span>
       </section>
 
       <section className="section-block" id="works">

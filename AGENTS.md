@@ -22,6 +22,21 @@
 - If a file exceeds 1,500 lines, assess whether it should be split and extract
   large standalone components into separate files where appropriate.
 
+## Portfolio visual system
+
+- Keep the portfolio's default theme in a restrained charcoal and grayscale
+  palette. Treat the CSS variables in `src/index.css` as the shared source for
+  page surfaces, text, borders, Mermaid diagrams, and the WebGL shader palette.
+- Keep the animated background behind readable content. Use stronger grain and
+  slow light movement on the home cover, then reduce both through the project
+  archive and long-form reading surfaces. Preserve a static fallback and respect
+  `prefers-reduced-motion`.
+- Keep the home cover centered on the owner's name. Show the portrait on About,
+  with project summaries in the home page's text index.
+- When project covers are introduced, use one consistent monochrome system of
+  abstract, defocused light and shadow across every project. Keep covers out of
+  the project data and page layout until that system is implemented as a whole.
+
 ## Project assets and images
 
 - Project images live alongside their markdown files under

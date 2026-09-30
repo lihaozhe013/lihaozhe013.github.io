@@ -1,7 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import * as THREE from 'three';
-import { InkFluidSimulation, type InkSplat } from '@/components/inkFluid';
+import {
+  InkFluidSimulation,
+  type InkFluidStepOptions,
+  type InkPresentationOptions,
+  type InkSplat,
+} from '@/components/inkFluid';
 
 const inkDebugLog = (...args: unknown[]) => {
   if (import.meta.env.DEV) console.info('[ink_fluid]', ...args);
@@ -39,8 +44,34 @@ interface PointerState {
   pulseAt: number;
 }
 
-function getModeStrength(_pathname: string): number {
-  return 1;
+interface BackgroundMode {
+  modeStrength: number;
+  grainStrength: number;
+  ambientMotion: number;
+}
+
+function getBackgroundMode(pathname: string): BackgroundMode {
+  if (pathname === '/') {
+    return {
+      modeStrength: 1,
+      grainStrength: 0.88,
+      ambientMotion: 1,
+    };
+  }
+
+  if (pathname.startsWith('/projects/')) {
+    return {
+      modeStrength: 0.22,
+      grainStrength: 0.2,
+      ambientMotion: 0,
+    };
+  }
+
+  return {
+    modeStrength: 0.42,
+    grainStrength: 0.34,
+    ambientMotion: 0,
+  };
 }
 
 function createPointerState(): PointerState {
@@ -111,9 +142,9 @@ function drawFallback(
   context.clearRect(0, 0, width, height);
 
   const wash = context.createRadialGradient(x, y, 0, x, y, radius);
-  wash.addColorStop(0, `rgba(31, 29, 26, ${0.13 * modeStrength})`);
-  wash.addColorStop(0.45, `rgba(115, 110, 101, ${0.035 * modeStrength})`);
-  wash.addColorStop(1, 'rgba(247, 244, 239, 0)');
+  wash.addColorStop(0, `rgba(238, 238, 234, ${0.13 * modeStrength})`);
+  wash.addColorStop(0.45, `rgba(186, 186, 182, ${0.055 * modeStrength})`);
+  wash.addColorStop(1, 'rgba(38, 38, 38, 0)');
   context.fillStyle = wash;
   context.fillRect(0, 0, width, height);
 }
@@ -156,12 +187,32 @@ export default function InkCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fallbackCanvasRef = useRef<HTMLCanvasElement>(null);
   const location = useLocation();
-  const modeRef = useRef(getModeStrength(location.pathname));
+  const modeRef = useRef(getBackgroundMode(location.pathname));
+  const coverVisibleRef = useRef(location.pathname === '/');
+  const coverObserverRef = useRef<IntersectionObserver | null>(null);
   const requestFrameRef = useRef<(() => void) | null>(null);
   const simulationRef = useRef<InkFluidSimulation | null>(null);
 
   useEffect(() => {
-    modeRef.current = getModeStrength(location.pathname);
+    modeRef.current = getBackgroundMode(location.pathname);
+    coverObserverRef.current?.disconnect();
+    coverObserverRef.current = null;
+    coverVisibleRef.current = location.pathname === '/';
+
+    if (location.pathname === '/') {
+      const cover = document.getElementById('cover');
+      if (cover && 'IntersectionObserver' in window) {
+        coverObserverRef.current = new IntersectionObserver(
+          ([entry]) => {
+            coverVisibleRef.current = entry.isIntersecting;
+            requestFrameRef.current?.();
+          },
+          { threshold: 0.02 },
+        );
+        coverObserverRef.current.observe(cover);
+      }
+    }
+
     simulationRef.current?.reset();
     requestFrameRef.current?.();
   }, [location.pathname]);
@@ -171,9 +222,10 @@ export default function InkCanvas() {
     const fallbackCanvas = fallbackCanvasRef.current;
     if (!canvas || !fallbackCanvas) return;
 
-    const reducedMotion = window.matchMedia(
+    const reducedMotionQuery = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
-    ).matches;
+    );
+    let reducedMotion = reducedMotionQuery.matches;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
     const pointer = createPointerState();
     const pendingSplats: InkSplat[] = [];
@@ -183,6 +235,7 @@ export default function InkCanvas() {
     let renderer: THREE.WebGLRenderer | null = null;
     let frameId = 0;
     let lastFrameAt = performance.now();
+    let lastAmbientFrameAt = 0;
     let lastDebugAt = 0;
     let energy = 0;
     let active = true;
@@ -193,6 +246,12 @@ export default function InkCanvas() {
       active = false;
       inkDebugWarn('fallback enabled', reason);
     };
+
+    const ambientIsActive = () =>
+      !reducedMotion &&
+      !coarsePointer &&
+      modeRef.current.ambientMotion > 0 &&
+      coverVisibleRef.current;
 
     const scheduleFrame = () => {
       if (frameId === 0 && !document.hidden) {
@@ -365,6 +424,34 @@ export default function InkCanvas() {
       scheduleFrame();
     };
 
+    const handleReducedMotion = (event: MediaQueryListEvent) => {
+      reducedMotion = event.matches;
+      if (reducedMotion && !pointer.active && pendingSplats.length === 0) {
+        if (frameId !== 0) window.cancelAnimationFrame(frameId);
+        frameId = 0;
+        if (active && simulation) {
+          simulation.setPresentation({
+            modeStrength: modeRef.current.modeStrength,
+            grainStrength: modeRef.current.grainStrength,
+            ambientMotion: 0,
+            pointer: pointer.position,
+            pointerActive: false,
+            pointerPulse: 0,
+            pointerSpeed: 0,
+            time: performance.now() / 1000,
+          });
+          simulation.render();
+        }
+        return;
+      }
+      scheduleFrame();
+    };
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault();
+      showFallback('WebGL context lost');
+    };
+
     const resize = () => {
       renderer?.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer?.setSize(window.innerWidth, window.innerHeight, false);
@@ -377,6 +464,12 @@ export default function InkCanvas() {
       frameId = 0;
       if (document.hidden) return;
       const now = time || performance.now();
+      const animateAmbient = ambientIsActive();
+      if (animateAmbient && now - lastAmbientFrameAt < 1000 / 30) {
+        scheduleFrame();
+        return;
+      }
+      if (animateAmbient) lastAmbientFrameAt = now;
       const delta = Math.min(
         0.035,
         Math.max(0.001, (now - lastFrameAt) / 1000),
@@ -397,33 +490,49 @@ export default function InkCanvas() {
       pointer.speed = pointerSpeed;
 
       if (active && simulation) {
-        energy = simulation.step(
-          {
+        const presentation: InkPresentationOptions = {
+          ...modeRef.current,
+          ambientMotion: animateAmbient ? modeRef.current.ambientMotion : 0,
+          pointer: pointer.position,
+          pointerActive,
+          pointerPulse,
+          pointerSpeed,
+          time: now / 1000,
+        };
+        simulation.setPresentation(presentation);
+        const fluidIsActive =
+          energy > 0.008 ||
+          splats.length > 0 ||
+          pendingSplats.length > 0 ||
+          pointerActive ||
+          pointerPulse > 0.01;
+        if (fluidIsActive) {
+          const stepOptions: InkFluidStepOptions = {
             delta,
             splats,
             pointer: pointer.position,
             pointerActive,
             pointerPulse,
             pointerSpeed,
-            modeStrength: modeRef.current,
-          },
-          now / 1000,
-        );
-        simulation.render();
+            modeStrength: modeRef.current.modeStrength,
+          };
+          energy = simulation.step(stepOptions, now / 1000);
+        }
+        simulation.render(now / 1000);
         if (debugPanel && now - lastDebugAt > 500) {
           updateDebugPanel(debugPanel, simulation, pointer);
           lastDebugAt = now;
         }
       } else if (fallbackContext) {
-        drawFallback(fallbackContext, pointer, modeRef.current);
+        drawFallback(fallbackContext, pointer, modeRef.current.modeStrength);
       }
 
       if (
-        !reducedMotion &&
-        (energy > 0.008 ||
-          pendingSplats.length > 0 ||
-          pointerActive ||
-          pointerPulse > 0.01)
+        ambientIsActive() ||
+        energy > 0.008 ||
+        pendingSplats.length > 0 ||
+        pointerActive ||
+        pointerPulse > 0.01
       ) {
         frameId = window.requestAnimationFrame(render);
       }
@@ -500,11 +609,13 @@ export default function InkCanvas() {
     });
     window.addEventListener('resize', resize);
     document.addEventListener('visibilitychange', handleVisibility);
+    reducedMotionQuery.addEventListener('change', handleReducedMotion);
+    canvas.addEventListener('webglcontextlost', handleContextLost);
 
     if (fallbackContext)
-      drawFallback(fallbackContext, pointer, modeRef.current);
+      drawFallback(fallbackContext, pointer, modeRef.current.modeStrength);
     render(0);
-    if (!reducedMotion) scheduleFrame();
+    if (ambientIsActive()) scheduleFrame();
 
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
@@ -512,6 +623,10 @@ export default function InkCanvas() {
       window.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', handleVisibility);
+      reducedMotionQuery.removeEventListener('change', handleReducedMotion);
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      coverObserverRef.current?.disconnect();
+      coverObserverRef.current = null;
       if (frameId !== 0) window.cancelAnimationFrame(frameId);
       requestFrameRef.current = null;
       simulationRef.current = null;
