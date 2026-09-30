@@ -27,12 +27,12 @@ async function getConfiguredMermaid(): Promise<Mermaid> {
         .getPropertyValue(name)
         .trim() || fallback;
     const colors = {
-      background: themeColor('--reading-surface', '#222222'),
-      component: themeColor('--component-surface', '#303030'),
-      foreground: themeColor('--text-ink', '#f2f2f0'),
-      muted: themeColor('--text-muted', '#b8b8b5'),
-      border: themeColor('--border-color', '#858582'),
-      accent: themeColor('--accent-color', '#e1e1dd'),
+      background: themeColor('--reading-surface', '#F3F0E9'),
+      component: themeColor('--component-surface', '#D3CEC2'),
+      foreground: themeColor('--text-ink', '#292824'),
+      muted: themeColor('--text-muted', '#625F58'),
+      border: themeColor('--border-color', '#B7B2A8'),
+      accent: themeColor('--accent-color', '#736553'),
     };
     mermaid.initialize({
       startOnLoad: false,

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink } from 'react-router-dom';
 import i18n from '@/i18n';
+import { portfolioData } from '@/data/portfolio';
 
 export default function Header() {
   const { t } = useTranslation();
@@ -19,15 +20,15 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <Link className="site-mark" to="/" aria-label={t('nav.index')}>
-        HL /
+      <Link className="site-mark" to="/" aria-label={portfolioData.person.name}>
+        {portfolioData.person.name}
       </Link>
       <nav className="site-nav" aria-label={t('nav.label')}>
         <NavLink
           className={({ isActive }) => (isActive ? 'is-active' : undefined)}
           to="/timeline"
         >
-          {t('nav.timeline')}
+          {t('nav.work')}
         </NavLink>
         <NavLink
           className={({ isActive }) => (isActive ? 'is-active' : undefined)}

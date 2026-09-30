@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import InkCanvas from '@/components/InkCanvas';
 import Header from '@/components/Header';
 
 interface AppLayoutProps {
@@ -9,7 +8,6 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="site-shell">
-      <InkCanvas />
       <div className="site-main">
         <Header />
         <main>{children}</main>

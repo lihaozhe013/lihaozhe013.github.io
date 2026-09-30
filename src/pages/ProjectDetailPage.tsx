@@ -10,6 +10,7 @@ import { getProjectCategoryLabel, portfolioData } from '@/data/portfolio';
 import { getProjectText } from '@/components/ProjectTrigger';
 import MarkdownCodeBlock from '@/components/MarkdownCodeBlock';
 import MermaidDiagram from '@/components/MermaidDiagram';
+import SiteFooter from '@/components/SiteFooter';
 import type { ProjectMeta } from '@/types/content';
 import remarkGfm from 'remark-gfm';
 import remarkHtmlComments from '@/plugins/remarkHtmlComments';
@@ -132,10 +133,7 @@ export default function ProjectDetailPage() {
         </article>
       </section>
 
-      <footer className="site-footer">
-        <span>{portfolioData.person.name}</span>
-        <span>© {new Date().getFullYear()}</span>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import avatarImage from '@/assets/photo.jpg';
 import { portfolioData } from '@/data/portfolio';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function AboutPage() {
   const { t } = useTranslation();
@@ -77,10 +78,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <footer className="site-footer">
-        <span>{portfolioData.person.name}</span>
-        <span>© {new Date().getFullYear()}</span>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

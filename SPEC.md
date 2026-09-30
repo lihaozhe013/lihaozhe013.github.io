@@ -1,82 +1,86 @@
-# Charcoal Grain and Ink Portfolio Theme
+# Editorial Portfolio
 
-## Intent
+## Direction
 
-Give the portfolio the monochrome, editorial cover treatment of the supplied
-references: charcoal surfaces, large serif type, defocused light, fine grain,
-delicate rules, and broad negative space. Keep the existing project and page
-content, bilingual navigation, and brush interaction.
+Present the portfolio as a quiet personal journal: limestone paper, ink-colored
+type, delicate rules, broad margins, matte image surfaces, and a restrained use
+of technology. The home page uses an asymmetric introduction with an ink study
+alongside the owner's name. The portrait remains on About.
 
 ## Shared visual system
 
-- Use `#262626` for the main surface, `#222222` for reading surfaces, and
-  `#303030` for raised components.
-- Use `#F2F2F0` for primary text, `#B8B8B5` for secondary text, and translucent
-  white for the one-pixel rules and restrained hover fills.
-- Keep Source Serif 4 and Source Han Serif SC for English and Chinese.
-- Keep content widths at or below approximately 80 English characters and 40
-  Chinese characters per line. Keep the shared `.page-title` at
-  `clamp(2rem, 4.6vw, 5rem)`.
-- Read all new visible copy from the existing locale JSON files. Do not add
-  project-cover data fields in this iteration.
+- Page surface: `#E8E5DE`.
+- Reading surface: `#F3F0E9`.
+- Image and raised component surface: `#D3CEC2`.
+- Primary text: `#292824`.
+- Secondary text: `#625F58`.
+- Accent: `#736553`.
+- Use one-pixel rules, square image corners, and generous responsive spacing.
+- Use Source Serif 4 and Source Han Serif SC for editorial type; use the system
+  sans-serif for navigation and supporting labels.
+- Share the `.page-title` scale across About, Work, Contact, and future pages.
+  Keep body text near 80 English characters or 40 Chinese characters per line.
+- Read visible content, labels, and image captions from the locale JSON files.
 
-## Pages
+## Page layouts
 
-- Home: set the owner's name in large serif type within a cover about 80svh
-  tall. Keep existing identity copy and links with the title; move the portrait
-  to About. Display selected projects as three full-width text rows ordered by
-  their existing project index.
-- About: pair the grayscale portrait with the existing introduction, resume
-  links, and short personal note. Follow with the existing skills and education.
-- Timeline: preserve the complete ordered project archive and its preview
-  dialogs. Use the same typography, lines, and grayscale hover treatment as
-  Home.
-- Contact: use the current invitation and social links in a spacious closing
-  layout.
-- Project details and dialogs: use stable dark reading surfaces. Style Mermaid,
-  tables, inline code, code blocks, controls, and borders for the grayscale
-  theme. Preserve project screenshots at their original color.
+- Navigation places the full name at left and Work, About, Contact, and locale
+  switching at right. Work links to the existing `/timeline` route.
+- Home places a two-line name, identity, introduction, and links at left. A
+  dedicated ink artwork sits at right with a translated caption. Selected work
+  retains project numbering: AIO Asset Normalizer is the large visual feature;
+  TradeFlow and Docmost are supporting text entries. Clicking artwork or a title
+  opens the existing preview dialog. A separate details link goes to the full
+  project page. The page closes with the existing personal introduction and a
+  shared contact footer.
+- About pairs the grayscale portrait and introduction, followed by text-based
+  skills and education. On narrow screens it orders the title, image,
+  introduction, skills, and education vertically.
+- Work retains every project in number order as a directory with the preview
+  dialog and direct detail links.
+- Contact ends with the existing invitation and social links.
+- Project details use a calm reading surface, a narrow text measure, and wider
+  media and diagram regions. Adapt dialogs, code blocks, tables, Mermaid
+  controls, and buttons to the same light palette. Keep source screenshots in
+  their original color.
 
-## WebGL environment and brush
+## Artwork and interaction
 
-- Use the existing WebGL renderer and canvas. Draw the background as a stable
-  monochrome base with three broad, soft light shapes and pixel-coordinate
-  grain. Keep grain stationary so it does not shimmer between frames.
-- Animate the home-cover light shapes slowly at up to 30fps while the cover is
-  visible. Let pointer movement and active ink velocity subtly distort nearby
-  light and grain. Keep interior page environments still between interactions.
-- Separate the environment render from the fluid solver. Render the background
-  on ambient cover frames without running fluid passes. Run the existing fluid
-  simulation while ink is being deposited and disperses, and preserve its
-  current pointer speed response, sampling, and fading behavior.
-- Render ink in grayscale from soft silver wet edges to charcoal cores. Use the
-  same monochrome palette for the trailing particles.
-- On touch-first screens, keep the ambient environment still and preserve the
-  light tap response. Honor changes to `prefers-reduced-motion`, pause when the
-  document is hidden, and stop home-cover movement after that section leaves the
-  viewport.
-- If WebGL setup fails or its context is lost, retain the charcoal CSS gradient,
-  a static grain layer, and the existing 2D interaction fallback.
-
-## Future project covers
-
-Project covers are out of scope for this iteration. Do not create cover images,
-empty cover frames, or metadata placeholders. When introduced, every project
-cover should use the same abstract, monochrome, defocused light-and-shadow
-language and preserve a consistent treatment across the portfolio.
+- The home ink study and AIO abstract stone cover are the two authored raster
+  assets for this iteration. Keep the home image in `src/assets/` and the cover
+  beside its project Markdown under `assets/`. Store cover paths in
+  `ProjectMeta` as relative asset paths; store cover alt text and captions in
+  locale JSON.
+- The local home artwork uses the existing WebGL fluid renderer over a
+  persistent static image. Sample the image in the composite shader and layer
+  stable fine grain, a subtle light drift, and graphite brush pigment over it.
+- Keep the brush sampling, speed response, diffusion, and decay inside the art
+  frame. Update the ambient shader at no more than 30fps and run fluid passes
+  only while ink is active or dispersing.
+- Stop ambient motion when the artwork leaves the viewport, the document is
+  hidden, or reduced motion is enabled. Touch-first devices use a static image
+  and light canvas tap response. Keep all motion within the artwork frame.
+- Keep the image visible when WebGL setup fails or the context is lost; use the
+  2D canvas as a light feedback fallback.
 
 ## Acceptance
 
-- The home cover, text project rows, About portrait, project archive, contact
-  page, dialogs, and project details all follow the shared grayscale design.
-- English and Chinese layouts remain readable at 320px and 390px widths; tablet
-  and desktop layouts are checked at 1024px and 1440px without horizontal
-  overflow.
-- Ordinary text has at least 4.5:1 contrast against the darkest content surface.
-- The home ambient shader remains distinct from the fluid solver, stops outside
-  the visible cover, and never animates while reduced motion is enabled.
-- Slow and fast brush movement, ink fading, touch feedback, route changes,
-  document visibility, WebGL fallback, keyboard-operated project dialogs, image
-  loading, code copying, and Mermaid zoom controls continue to work.
-- TypeScript, production build, and formatting checks pass. Keep changes in the
-  working tree; do not create a commit or push by default.
+- Keep the home, About, Work, Contact, detail, and dialog layouts within the
+  shared design system at 1440px, 1024px, 390px, and 320px.
+- English and Chinese headings, navigation, and project rows fit without
+  horizontal overflow.
+- Maintain at least 4.5:1 contrast for ordinary text.
+- Preserve route behavior, project numbering and facts, previews, keyboard
+  focus, Escape handling, focus restoration, direct detail navigation, browser
+  history, code copying, Mermaid zoom, and original screenshot colors.
+- Check pointer painting and decay, artwork visibility pause, document
+  visibility pause, reduced motion, and WebGL fallback.
+- Run TypeScript, production build, and formatting checks. Leave completed
+  changes in the working tree; do not commit or push unless requested.
+
+## Future project covers
+
+Future covers should use a consistent abstract material image system based on
+limestone, graphite, and soft side light. The current single AIO cover is an
+intentional feature of this editorial home composition; do not introduce empty
+cover placeholders for other projects.

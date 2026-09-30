@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import ProjectTrigger, { getProjectText } from '@/components/ProjectTrigger';
+import SiteFooter from '@/components/SiteFooter';
 import { getProjectCategoryLabel, portfolioData } from '@/data/portfolio';
 
 export default function TimelinePage() {
@@ -49,10 +50,7 @@ export default function TimelinePage() {
         </div>
       </section>
 
-      <footer className="site-footer">
-        <span>{portfolioData.person.name}</span>
-        <span>© {new Date().getFullYear()}</span>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

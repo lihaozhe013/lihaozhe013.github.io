@@ -39,10 +39,12 @@
   },
   "hero": {
     "availability": "",
+    "coverIndex": "01",
     "eyebrow": "Electrical & Computer Engineering · University of Toronto",
     "headline": "Creative · Empathetic",
     "introduction": "4th year ECE student @ University of Toronto",
-    "portraitCaption": ""
+    "portraitCaption": "",
+    "artCaption": "A study in ink, pressure, and stillness"
   },
   "labels": {
     "coursework": "Relevant coursework",
@@ -62,7 +64,8 @@
     "contact": "Contact",
     "index": "Index",
     "label": "Primary navigation",
-    "timeline": "Timeline"
+    "timeline": "Timeline",
+    "work": "Work"
   },
   "pages": {
     "about": {
@@ -84,6 +87,7 @@
   },
   "projects": {
     "aio-asset-normalizer": {
+      "coverAlt": "A pale stone sculpture with a deep circular opening, photographed in soft side light.",
       "description": "A pure-Rust desktop application for standardizing .glb 3D assets, featuring GLB editing, animation playback, BVH motion retargeting, and CLI batch processing — no Blender or external dependencies required.",
       "fullProjectHighlights": [
         "Pure-Rust GLB editing and export pipeline",
@@ -154,6 +158,8 @@
     "archive": "Project archive",
     "contact": "Contact",
     "education": "Education",
+    "homeAboutIndex": "02",
+    "homeWorksIndex": "01",
     "selectedWorks": "Selected works",
     "skills": "Technical index",
     "timeline": "Timeline"

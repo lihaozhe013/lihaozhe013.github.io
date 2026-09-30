@@ -4,7 +4,10 @@ import type {
   ProjectCategory,
   ProjectLinkType,
 } from '@/types/content';
-import { hasProjectMarkdown } from '@/data/projectMarkdown';
+import {
+  hasProjectMarkdown,
+  resolveProjectImage,
+} from '@/data/projectMarkdown';
 
 const projectCategories = rawPortfolioData.projectCategories;
 
@@ -46,19 +49,46 @@ function parseProjectMarkdown(value: unknown): string | undefined {
   return value;
 }
 
+function parseProjectCover(
+  value: unknown,
+  markdown: string | undefined,
+): string | undefined {
+  if (value === undefined) return undefined;
+  if (
+    typeof value !== 'string' ||
+    value.length === 0 ||
+    value.includes('\\') ||
+    value.startsWith('/') ||
+    /^(https?:|data:)/.test(value)
+  ) {
+    throw new Error(`Invalid project cover path: ${String(value)}`);
+  }
+  if (!markdown || !resolveProjectImage(markdown, value)) {
+    throw new Error(`Project cover image was not found: ${value}`);
+  }
+  return value;
+}
+
 export const portfolioData: PortfolioData = {
   ...rawPortfolioData,
-  projects: rawPortfolioData.projects.map((project) => ({
-    ...project,
-    markdown: parseProjectMarkdown(
+  projects: rawPortfolioData.projects.map((project) => {
+    const markdown = parseProjectMarkdown(
       'markdown' in project ? project.markdown : undefined,
-    ),
-    category: parseProjectCategory(project.category),
-    links: project.links.map((link) => ({
-      ...link,
-      type: parseProjectLinkType(link.type),
-    })),
-  })),
+    );
+    return {
+      ...project,
+      markdown,
+      cover: parseProjectCover(
+        'cover' in project ? project.cover : undefined,
+        markdown,
+      ),
+      category: parseProjectCategory(project.category),
+      links: project.links.map((link) => ({
+        ...link,
+        type: parseProjectLinkType(link.type),
+      })),
+    };
+  }),
 };
 
 export function getProjectCategoryLabel(

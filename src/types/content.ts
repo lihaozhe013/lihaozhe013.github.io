@@ -18,6 +18,7 @@ export interface ProjectMeta {
   category: ProjectCategory;
   featured: boolean;
   markdown?: string;
+  cover?: string;
   year?: string;
   technologies: string[];
   links: ProjectLink[];

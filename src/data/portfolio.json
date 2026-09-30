@@ -164,6 +164,7 @@
       "featured": true,
       "id": "aio-asset-normalizer",
       "index": "01",
+      "cover": "assets/editorial-cover.png",
       "links": [
         {
           "href": "https://github.com/lihaozhe013/aio-asset-normalizer",

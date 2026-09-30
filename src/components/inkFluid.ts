@@ -362,8 +362,10 @@ const compositeFragmentShader = /* glsl */ `
   precision highp float;
   uniform sampler2D uPigment;
   uniform sampler2D uVelocity;
+  uniform sampler2D uBackgroundTexture;
   uniform vec2 uResolution;
   uniform float uAspect;
+  uniform float uBackgroundAspect;
   uniform float uMode;
   uniform float uGrainStrength;
   uniform float uAmbientMotion;
@@ -422,10 +424,21 @@ const compositeFragmentShader = /* glsl */ `
       + pointerWake * 0.24;
     float cloudGrain = fbm(warpedPoint * 1.3 + vec2(sway * 0.25, 0.0));
     float light = clamp((haze * 0.47 + smoothstep(0.3, 0.72, cloudGrain) * 0.14) * uMode, 0.0, 0.66);
-    vec3 background = mix(uBaseColor, uHazeColor, light);
-    vec2 grainSize = max(uResolution / 1800.0, vec2(1.0));
-    float grain = hash(floor(gl_FragCoord.xy / grainSize));
-    background += (grain - 0.5) * 0.15 * uGrainStrength;
+    vec2 backgroundUv = vUv;
+    if (uBackgroundAspect > uAspect) {
+      backgroundUv.x = (vUv.x - 0.5) * (uAspect / uBackgroundAspect) + 0.5;
+    } else {
+      backgroundUv.y =
+        (vUv.y - 0.5) * (uBackgroundAspect / uAspect) + 0.5;
+    }
+    vec2 textureDrift = flow * 0.04
+      + vec2(sway * 0.003, cos(uTime * 0.14) * uAmbientMotion * 0.002)
+      + pointerDelta * pointerWake * 0.008;
+    vec3 image = texture2D(uBackgroundTexture, backgroundUv + textureDrift).rgb;
+    vec3 atmosphere = mix(uBaseColor, uHazeColor, light);
+    vec3 background = mix(image, atmosphere, clamp(light * 0.13, 0.0, 0.12));
+    float grain = hash(floor(gl_FragCoord.xy));
+    background += (grain - 0.5) * 0.035 * uGrainStrength;
     vec4 pigment = texture2D(uPigment, vUv);
     float pigmentDensity = clamp(pigment.r, 0.0, 1.0);
     float wetness = clamp(pigment.g, 0.0, 1.0);
@@ -650,8 +663,10 @@ export class InkFluidSimulation {
       uniforms: {
         uPigment: { value: null },
         uVelocity: { value: null },
+        uBackgroundTexture: { value: null },
         uResolution: { value: new THREE.Vector2(width, height) },
         uAspect: { value: 1 },
+        uBackgroundAspect: { value: 1 },
         uMode: { value: 1 },
         uGrainStrength: { value: 0.36 },
         uAmbientMotion: { value: 0 },
@@ -659,13 +674,13 @@ export class InkFluidSimulation {
         uPointer: { value: new THREE.Vector2() },
         uPointerPulse: { value: 0 },
         uPointerActive: { value: 0 },
-        uBaseColor: { value: readThemeColor('--shader-base', '#262626') },
-        uHazeColor: { value: readThemeColor('--shader-haze', '#777777') },
+        uBaseColor: { value: readThemeColor('--shader-base', '#D3CEC2') },
+        uHazeColor: { value: readThemeColor('--shader-haze', '#F3F0E9') },
         uPigmentMidColor: {
-          value: readThemeColor('--shader-ink-mid', '#b7b7b3'),
+          value: readThemeColor('--shader-ink-mid', '#625F58'),
         },
         uPigmentCoreColor: {
-          value: readThemeColor('--shader-ink-core', '#191919'),
+          value: readThemeColor('--shader-ink-core', '#292824'),
         },
       },
       vertexShader: fullscreenVertexShader,
@@ -687,7 +702,7 @@ export class InkFluidSimulation {
         uParticleSize: { value: 3.6 },
         uPointerSpeed: { value: 0 },
         uParticleColor: {
-          value: readThemeColor('--shader-particle', '#ededeb'),
+          value: readThemeColor('--shader-particle', '#292824'),
         },
       },
       vertexShader: particleVertexShader,
@@ -880,6 +895,11 @@ export class InkFluidSimulation {
       : 0;
     this.particleMaterial.uniforms.uMode.value = options.modeStrength;
     this.particleMaterial.uniforms.uPointerSpeed.value = options.pointerSpeed;
+  }
+
+  setBackgroundTexture(texture: THREE.Texture, aspectRatio: number): void {
+    this.compositeMaterial.uniforms.uBackgroundTexture.value = texture;
+    this.compositeMaterial.uniforms.uBackgroundAspect.value = aspectRatio;
   }
 
   step(options: InkFluidStepOptions, time: number): number {

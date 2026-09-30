@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { portfolioData } from '@/data/portfolio';
+import SiteFooter from '@/components/SiteFooter';
 
 export default function ContactPage() {
   const { t } = useTranslation();
@@ -37,10 +38,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <footer className="site-footer">
-        <span>{portfolioData.person.name}</span>
-        <span>© {new Date().getFullYear()}</span>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

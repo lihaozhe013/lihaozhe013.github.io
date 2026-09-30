@@ -39,10 +39,12 @@
   },
   "hero": {
     "availability": "",
+    "coverIndex": "01",
     "eyebrow": "Electrical & Computer Engineering · University of Toronto",
     "headline": "Creative · Empathetic",
     "introduction": "4th year ECE student at the University of Toronto",
-    "portraitCaption": ""
+    "portraitCaption": "",
+    "artCaption": "墨迹、笔压与静默的一次练习"
   },
   "labels": {
     "coursework": "相关课程",
@@ -62,7 +64,8 @@
     "contact": "联系我",
     "index": "目录",
     "label": "主导航",
-    "timeline": "时间线"
+    "timeline": "时间线",
+    "work": "作品"
   },
   "pages": {
     "about": {
@@ -84,6 +87,7 @@
   },
   "projects": {
     "aio-asset-normalizer": {
+      "coverAlt": "柔和侧光下的浅色石质雕塑，中央有一个深色圆形开口。",
       "description": "一款纯 Rust 桌面应用，用于标准化 .glb 3D 资产，支持 GLB 编辑、动画播放、BVH 动作重定向及 CLI 批量处理——无需 Blender 或外部依赖。",
       "fullProjectHighlights": [
         "纯 Rust 实现的 GLB 编辑与导出管线",
@@ -154,6 +158,8 @@
     "archive": "作品",
     "contact": "联系我",
     "education": "教育",
+    "homeAboutIndex": "02",
+    "homeWorksIndex": "01",
     "selectedWorks": "选集",
     "skills": "技术栈",
     "timeline": "时间线"

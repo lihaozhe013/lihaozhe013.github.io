@@ -24,18 +24,24 @@
 
 ## Portfolio visual system
 
-- Keep the portfolio's default theme in a restrained charcoal and grayscale
-  palette. Treat the CSS variables in `src/index.css` as the shared source for
-  page surfaces, text, borders, Mermaid diagrams, and the WebGL shader palette.
-- Keep the animated background behind readable content. Use stronger grain and
-  slow light movement on the home cover, then reduce both through the project
-  archive and long-form reading surfaces. Preserve a static fallback and respect
-  `prefers-reduced-motion`.
-- Keep the home cover centered on the owner's name. Show the portrait on About,
-  with project summaries in the home page's text index.
-- When project covers are introduced, use one consistent monochrome system of
-  abstract, defocused light and shadow across every project. Keep covers out of
-  the project data and page layout until that system is implemented as a whole.
+- Use the shared limestone palette in the CSS variables: `#E8E5DE` for the page,
+  `#F3F0E9` for reading surfaces, `#D3CEC2` for image and component surfaces,
+  `#292824` for primary text, `#625F58` for secondary text, and `#736553` for
+  accents. Apply the same values to CSS, Mermaid, and WebGL.
+- Keep Source Serif 4 and Source Han Serif SC for editorial type. Use restrained
+  italic display text and a system sans-serif for navigation and labels.
+- Keep the home cover asymmetric: name and introduction at left, an ink study at
+  right, followed by one large featured project and two supporting text entries.
+  Show the portrait on About and retain all project summaries in the Work index.
+- Keep long-form reading surfaces calm and opaque. Limit English body copy to
+  about 80 characters and Chinese body copy to about 40 characters per line.
+- Keep brush and ambient motion inside the home artwork. Cap ambient updates at
+  30fps, pause outside the visible artwork or while the document is hidden, and
+  respect `prefers-reduced-motion`. Preserve a static image and lightweight
+  canvas fallback.
+- New project covers belong beside their project Markdown and use a consistent
+  editorial material language of limestone, graphite, soft side light, and
+  abstract sculptural form. Keep cover paths relative to the project folder.
 
 ## Project assets and images
 
