@@ -69,7 +69,7 @@
   },
   "pages": {
     "about": {
-      "introduction": "Computer Engineering student working across software, video games, and interactive projects. I like understanding why something feels intuitive, where complexity hides, and what happens when people do things differently from how it was imagined.\nAway from code: films, music, fiction, games, and esports.",
+      "introduction": "Computer Engineering student at the University of Toronto, building developer tools, business software, and interactive projects. My recent work spans Rust asset processing, desktop terminals, visual Git review, and trade operations with read-only access for AI tools. I focus on clear boundaries between user decisions, application state, and external systems.\nAway from code: films, music, fiction, games, and esports.",
       "resume": {
         "english": "英文简历",
         "chinese": "中文简历"
@@ -81,18 +81,18 @@
       "title": "Let's make something careful."
     },
     "timeline": {
-      "introduction": "A working timeline of video games, software, and embedded system projects.",
+      "introduction": "Developer tools, business software, interactive projects, and earlier engineering work.",
       "title": "A record of things made."
     }
   },
   "projects": {
     "aio-asset-normalizer": {
       "coverAlt": "柔和侧光下的浅色石质雕塑，中央有一个深色圆形开口。",
-      "description": "一款纯 Rust 桌面应用，用于标准化 .glb 3D 资产，支持 GLB 编辑、动画播放、BVH 动作重定向及 CLI 批量处理——无需 Blender 或外部依赖。",
+      "description": "A Rust desktop and CLI toolkit for preparing game-ready GLB assets: inspect and edit models, retarget BVH or GLB motion, replace PBR textures, and batch-convert authoring files through Blender.",
       "fullProjectHighlights": [
-        "纯 Rust 实现的 GLB 编辑与导出管线",
-        "BVH 动作重定向与可复用映射契约",
-        "CLI 模式支持批量脚本处理"
+        "GLB editing, animation trimming, and validated export",
+        "BVH and GLB retargeting through a shared Mapping v2 contract",
+        "A headless JSON CLI backed by the desktop domain code"
       ],
       "title": "AIO Asset Normalizer"
     },
@@ -126,31 +126,45 @@
       "description": "An Ontario-style license plate recognition system trained with PyTorch, combining a CNN bounding-box layer and a CRNN character-recognition layer.",
       "title": "License Plate Recognition System"
     },
-    "docmost": {
-      "description": "一个面向个人与小型可信团队的 Docmost 私有化分支，保留实时协作能力，加入管理员账号管理与可直接修改当前页面的 AI 编辑 Agent。",
-      "fullProjectHighlights": [
-        "面向私有部署的小型协作工作区",
-        "管理员创建账号与重置密码，无需 SMTP",
-        "基于 Responses API 的对话式页面编辑 Agent"
-      ],
-      "title": "Docmost 私人分支"
-    },
     "runner-game": {
       "description": "An embedded systems project featuring a runner game implemented on a RISC-V processor with custom graphics and input handling.",
       "title": "Runner Game"
     },
     "streamfile-server": {
-      "description": "A lightweight, database-free resource hosting server with markdown rendering, media playback, webpage hosting, private links, uploads, and search.",
-      "title": "StreamFile Server"
+      "description": "A database-free file server with Markdown reading, media playback, subtitle conversion, folder uploads, and filename search. A Bun backend and React interface ship together in standalone executables.",
+      "title": "StreamFile Server",
+      "fullProjectHighlights": [
+        "Filesystem browsing, Markdown, and subtitled media playback",
+        "Staged uploads with collision-safe publishing",
+        "Standalone binaries with embedded frontend assets"
+      ]
     },
     "tradeflow-system": {
-      "description": "A full-stack trade management web app built for a small business, developed and deployed from design through production. ",
+      "description": "A trade and inventory workspace connecting purchases, sales, stock movements, settlements, and FIFO profit analysis, with a read-only MCP service and a desktop assistant for connecting business data to external agents.",
       "fullProjectHighlights": [
-        "交易与库存的事实来源模型",
-        "财务与分析数据流",
-        "前端、API 与数据库架构"
+        "Transaction-backed inventory and FIFO cost analysis",
+        "Account-scoped, read-only MCP access to business data",
+        "TradeFlow Connect with verified setup and recovery"
       ],
-      "title": "TradeFlow System"
+      "title": "TradeFlow"
+    },
+    "geared-term": {
+      "title": "Geared Term",
+      "description": "A desktop terminal bringing local shells, SSH, SFTP, and an AI conversation into one workspace. Terminal context is shared explicitly, credentials stay in an encrypted vault, and suggested commands remain under user control.",
+      "fullProjectHighlights": [
+        "Local and SSH terminals with integrated file transfer",
+        "Encrypted credentials and validated Electron process boundaries",
+        "Context-aware AI chat with separate Copy, Insert, and Run actions"
+      ]
+    },
+    "augur-git": {
+      "title": "Augur Git",
+      "description": "A review-first desktop Git client for changes produced by editors and coding agents. The Tauri app combines navigable diffs, commit history, revision comparison, and a compact Sidecar layout with prompts for external agents.",
+      "fullProjectHighlights": [
+        "Working-tree review, commit graphs, and revision comparison",
+        "A compact Sidecar workspace beside a terminal or editor",
+        "Typed Git operations and context-aware agent prompt handoff"
+      ]
     }
   },
   "sections": {

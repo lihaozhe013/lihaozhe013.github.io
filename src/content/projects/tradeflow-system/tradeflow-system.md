@@ -1,170 +1,143 @@
-# Tradeflow System
+TradeFlow is a trade and inventory workspace for small businesses. Purchases,
+sales, products, partners, stock movements, settlements, and financial analysis
+share a PostgreSQL data model rather than living in separate spreadsheets.
 
-> A lightweight, full-stack trade and inventory management platform for small
-> businesses — built with React, Express, and PostgreSQL.
+The current project also exposes business queries through a read-only MCP
+service. TradeFlow Connect, a separate Tauri desktop assistant and Rust CLI,
+helps users install and verify account-bound connections in external AI tools.
 
-Tradeflow brings purchasing, sales, inventory tracking, partner settlements,
-financial analysis, and role-based access control into one cohesive workspace.
-Day-to-day transaction data stays connected to every business view that depends
-on it, so dashboards, balances, and reports are always in sync.
+## Connected Business Operations
 
-## At a Glance
+The browser application organizes everyday work into operations, master data,
+finance, and administration. Users record inbound purchases and outbound sales,
+maintain product categories and business partners, and review partner-specific
+price history. Batch operations support repetitive transaction entry.
 
-|                   |                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------- |
-| **Tech Stack**    | React 19 · Vite · Ant Design · Express · TypeScript · Prisma · PostgreSQL             |
-| **Core Domain**   | Trade operations, inventory, finance, analytics                                       |
-| **Architecture**  | Single-page app → REST API → Domain services → Relational store                       |
-| **Key Qualities** | Movement-based inventory · derived financial positions · role-aware UI · multilingual |
+Inventory updates follow the transaction paths. A movement ledger records stock
+effects, and the inventory service can rebuild totals and ledger entries from
+inbound and outbound history. This gives the application a recovery path when
+derived inventory needs recalculation.
 
-## Feature Showcase
+Receivables and payables connect transaction amounts with recorded payments.
+Partner-level summaries lead to detailed account review, while invoice grouping
+organizes related transactions. These financial views depend on recorded
+business activity rather than a separately maintained balance spreadsheet.
 
-### 1. Operations & Master Data
+## Analysis With Traceable Cost
 
-Record purchases and sales (including batch operations), manage products,
-categories, business partners, and partner-specific price history.
+Purchase and sales analysis can be filtered by date, partner, and product. Sales
+analysis calculates cost of goods sold using FIFO: purchase batches feed a
+product-level queue, and sales consume it in historical order. A filtered report
+still needs the preceding history to identify the batches consumed by the
+selected sales.
 
-<!-- Main operations dashboard showing purchase/sale records and quick-action buttons -->
+The interface combines summary charts with transaction-level detail. Spreadsheet
+exports expose operational, settlement, and analytical data for further review.
+Decimal.js supports financial calculations, while SheetJS provides export
+output. Overview and invoice caches are derived views with their own refresh
+paths, not the underlying transaction record.
 
-![Operations Dashboard](assets/dashboard.png)
+## Permissions Across Browser and API
 
-- Inbound & outbound transaction recording
-- Product catalogue with categories
-- Partner management with historical pricing
+JWT authentication and Argon2 password hashing support reader, editor, and
+superuser accounts. Browser navigation reflects access, and the API enforces
+permissions independently. User administration and audit records provide the
+operational controls around business changes.
 
-### 2. Inventory Management
+The browser supports English, Simplified Chinese, and Korean. Its responsive
+layout keeps operations and administration available through desktop navigation
+or a mobile menu.
 
-Real-time stock levels backed by a full movement history. The movement ledger
-can be rebuilt from transaction data, keeping inventory recoverable and
-auditable.
+## Read-Only Business Tools for Agents
 
-<!-- Inventory view with stock levels table and movement history sidebar -->
+The optional MCP endpoint uses Streamable HTTP and advertises only tools granted
+to the credential and permitted for the account's current role.
 
-![Inventory View](assets/inventory-view.png)
+| Tool              | Business question                                         |
+| ----------------- | --------------------------------------------------------- |
+| search_partners   | Which customer or supplier matches this name or code?     |
+| search_products   | Which product or category matches this query?             |
+| get_inventory     | How much stock is on hand?                                |
+| list_transactions | Which purchases or sales match these filters?             |
+| get_receivables   | What does a customer owe, and what records explain it?    |
+| get_payables      | What is owed to a supplier?                               |
+| get_analysis      | What are purchasing totals or FIFO sales cost and profit? |
 
-- Current stock with movement-based tracking
-- Low-stock alerts on overview dashboards
-- Repairable ledger derived from transaction history
+Reader accounts cannot discover or call receivable, payable, or analysis tools.
+Authorized queries cover the instance rather than an employee-specific data
+partition. Results are paginated, timestamped, and include validated query
+parameters; partner contacts, addresses, phone numbers, and free-text remarks
+are excluded.
 
-### 3. Financial Visibility
+MCP reads use a separate Prisma pool and PostgreSQL read-only transactions.
+Queries reuse business calculations without rebuilding inventory or refreshing
+other caches. Host/origin checks and bounded request, concurrency, and analysis
+budgets surround the endpoint.
 
-Monitor customer receivables and supplier payables, record payments, and
-reconcile against transaction totals. Invoice grouping supports structured
-billing workflows.
+Static integration tokens remain supported. Account-bound credentials store only
+a SHA-256 digest on the server, expire after 90 days, and are checked against
+current account state on every request. Revocation, password changes, account
+deletion, or disabling the account prevent subsequent access. Users can inspect
+and revoke their own credentials from the browser.
 
-<!-- Finance panel showing receivables/payables summary and payment history -->
+## TradeFlow Connect
 
-![Receivables Overview](assets/outbound.png) _Receivables overview — outstanding
-amounts per customer._
+The desktop assistant signs in to a TradeFlow server, issues an account-bound
+credential, and configures OpenCode V2, WorkBuddy, or both. Its workflow checks
+the endpoint, MCP handshake, tool discovery, and a minimal business query before
+reporting a verified service connection. Host trust and reload remain user
+steps; an endpoint probe alone does not prove the external tool has activated
+it.
 
-![Receivables Detail](assets/outbound2.png) _Receivables detail — modal showing
-line-item breakdown for a single receivable._
+Configuration edits preserve unrelated servers and JSONC comments. Private
+backups, advisory locking, concurrent-change detection, atomic replacement, and
+a recovery journal make failed or interrupted setup recoverable. If an external
+program changes the file, recovery stops rather than overwriting that work.
 
-![Payables Overview](assets/payable1.png) _Payables overview — outstanding
-amounts per supplier._
+The bundled Rust CLI also supports diagnosis, repair, and a stdio bridge. The
+bridge forwards tool listing and calls to the server without opening a local
+HTTP listener, and can run without the GUI. Switching from direct HTTP to the
+bridge is explicit.
 
-![Payables Detail](assets/payable2.png) _Payables detail — modal showing
-line-item breakdown for a single payable._
+Local credential files use restricted filesystem permissions; they are not an
+encrypted vault. Passwords are not persisted and login JWTs stay in Rust memory.
+Removing a local connection and revoking its remote credential are separate
+operations, with redacted cleanup reminders connecting the two.
 
-- Receivables & payables tracking
-- Payment recording with settlement comparison
-- Invoice grouping for account review
-
-### 4. Analytics & Reporting
-
-Analyze purchasing and sales across time periods, partners, and products.
-Summarized statistics sit alongside transaction-level detail, and data can be
-exported for external processing.
-
-<!-- Analytics page with date-range selector, summary charts, and export button -->
-
-![Analytics Dashboard](assets/analytics-dashboard.png)
-
-- Period-based purchasing & sales analysis
-- Chart-driven summaries with drill-down detail
-- Spreadsheet export for all operational, financial, and analytical data
-
-### 5. Access Control & Governance
-
-JWT-based authentication with role-aware navigation. The interface adapts per
-user role while the backend enforces permissions and records audit events.
-
-<!-- Login page: JWT-based authentication with role
-selection. -->
-
-![Login Page](assets/login.png)
-
-<!-- User administration: role
-assignments and account management. -->
-
-![User Administration](assets/user-admin.png)
-
-<!-- Audit log: system-wide event tracking for
-governance. -->
-
-![Audit Log](assets/audit.png)
-
-- Reader / Editor / Superuser roles
-- User administration & audit log
-- Multilingual interface with configurable presentation options
-
-## Architecture Overview
+## Architecture
 
 ```mermaid
-flowchart LR
-  accTitle: Tradeflow high-level architecture
-  accDescr: React SPA talks to Express API, which routes through auth and domain services to Prisma/PostgreSQL, caches, and export services.
-  UI[React SPA] -->|HTTP| API[Express API]
-  API --> AUTH[Auth & RBAC]
-  API --> DOMAIN[Domain Services]
-  DOMAIN --> ORM[Prisma ORM]
-  ORM --> DB[(PostgreSQL)]
-  DOMAIN --> CACHE[Config & Caches]
-  DOMAIN --> EXPORT[Export]
+flowchart TD
+    WEB[React business workspace] --> REST[Express REST API]
+    REST --> DOMAIN[Inventory, finance, and analysis]
+    DOMAIN --> ORM[Prisma]
+    ORM --> DB[(PostgreSQL)]
+    AGENT[External AI client] --> MCP[Authenticated read-only MCP]
+    MCP --> READ[Shared business read service]
+    READ --> RODB[Read-only database transaction]
+    RODB --> DB
+    CONNECT[TradeFlow Connect] --> SETUP[Account credentials and local configuration]
+    SETUP --> AGENT
 ```
 
-| Layer             | Description                                                                                  |
-| ----------------- | -------------------------------------------------------------------------------------------- |
-| **Frontend**      | React 19 + Vite SPA — operational pages, reusable hooks, charts, forms, i18n                 |
-| **Backend**       | Express + TypeScript — route modules, domain services, inventory & finance logic             |
-| **Data**          | PostgreSQL via typed Prisma ORM — transactions, master data, movements, audit                |
-| **Derived State** | Inventory totals, overview snapshots, invoice groupings, analytics — refreshed independently |
+The frontend uses React, Vite, Ant Design, Recharts, and i18next. The TypeScript
+backend uses Express and Prisma with PostgreSQL. TradeFlow Connect has its own
+React/Tauri interface and Rust core, so desktop credential setup does not become
+a prerequisite for ordinary browser operations.
 
-## Deployment & Production
+The server build bundles the browser assets and backend for container delivery;
+PostgreSQL remains a separate service. The local deployment companion includes
+Docker Compose configuration and PostgreSQL backup tooling. Desktop packaging
+ships its CLI as a sidecar, independently of the server container.
 
-Tradeflow ships with a complete Dockerfile for one-command deployment. The
-container image bundles the frontend build and backend runtime, ready to run on
-any Docker-compatible host — local machines, cloud VMs, or container
-orchestration platforms.
+## Validation and Current Scope
 
-> **Production case:** Tradeflow was customized and deployed on an AWS Lightsail
-> instance for a small business, where it has been running continuously for over
-> two years. Updates are delivered through Argo CD with zero-downtime rollouts,
-> demonstrating the system's stability in a real operational environment.
+The repository includes backend tests, an isolated PostgreSQL test-database
+workflow, Playwright browser tests, and separate Rust and UI tests for the
+desktop assistant. Connection diagnostics check protocol behavior and recovery;
+external client activation still depends on its supported version and local
+trust settings. TradeFlow Connect is currently documented as a test release.
 
-- Full-stack Docker image — single container, no manual setup
-- Persistent storage for database and file exports
-- Compatible with CI/CD pipelines (Argo CD, GitHub Actions, etc.)
-
-## Tech Stack
-
-| Layer       | Technologies                                                    |
-| ----------- | --------------------------------------------------------------- |
-| Frontend    | React 19, Vite, Ant Design, Recharts, i18next                   |
-| Backend     | Node.js, TypeScript, Express                                    |
-| Data Access | Prisma ORM, PostgreSQL                                          |
-| Security    | JWT, Argon2 hashing, role-based permissions                     |
-| Reporting   | Server-side aggregation, file-backed caches, spreadsheet export |
-
-## Project Layout
-
-```text
-frontend/      → React SPA — pages, hooks, components, i18n
-backend/       → Express API — routes, services, Prisma schema
-build-config/  → Metadata & presentation config
-docs/          → Architecture & data-flow references
-```
-
-_Tradeflow is designed as a focused, production-ready foundation for businesses
-that need connected trade operations without the overhead of a large enterprise
-platform._
+The project links operational software with bounded AI access: humans continue
+to enter and manage business records, while external tools can query the same
+inventory and financial calculations through a controlled read-only surface.

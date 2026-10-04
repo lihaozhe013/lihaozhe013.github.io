@@ -55,34 +55,129 @@
     {
       "category": "software",
       "featured": true,
-      "id": "docmost",
-      "index": "03",
+      "id": "aio-asset-normalizer",
+      "index": "01",
+      "cover": "assets/editorial-cover.png",
       "links": [
         {
-          "href": "https://github.com/lihaozhe013/docmost",
+          "href": "https://github.com/lihaozhe013/aio-asset-normalizer",
           "label": "GitHub",
           "type": "github"
         }
       ],
-      "markdown": "docmost/docmost.md",
+      "markdown": "aio-asset-normalizer/aio-asset-normalizer.md",
+      "technologies": [
+        "Rust",
+        "egui",
+        "three-d",
+        "glTF 2.0",
+        "BVH",
+        "Blender",
+        "Clap"
+      ]
+    },
+    {
+      "category": "software",
+      "featured": true,
+      "id": "tradeflow-system",
+      "index": "02",
+      "links": [
+        {
+          "href": "https://github.com/lihaozhe013/tradeflow-core",
+          "label": "GitHub",
+          "type": "github"
+        }
+      ],
+      "markdown": "tradeflow-system/tradeflow-system.md",
       "technologies": [
         "TypeScript",
         "React",
-        "NestJS",
-        "Tiptap",
-        "Yjs",
-        "Hocuspocus",
+        "Ant Design",
+        "Express",
+        "Prisma",
         "PostgreSQL",
-        "Redis",
-        "Docker",
-        "OpenAI Responses API"
+        "Decimal.js",
+        "SheetJS",
+        "MCP",
+        "Rust",
+        "Tauri 2",
+        "Docker"
+      ]
+    },
+    {
+      "category": "software",
+      "featured": true,
+      "id": "geared-term",
+      "index": "03",
+      "links": [
+        {
+          "href": "https://github.com/lihaozhe013/geared-term",
+          "label": "GitHub",
+          "type": "github"
+        }
+      ],
+      "markdown": "geared-term/geared-term.md",
+      "technologies": [
+        "TypeScript",
+        "Electron",
+        "React",
+        "xterm.js",
+        "node-pty",
+        "ssh2",
+        "SQLite",
+        "Zod"
+      ]
+    },
+    {
+      "category": "software",
+      "featured": false,
+      "id": "augur-git",
+      "index": "04",
+      "links": [
+        {
+          "href": "https://github.com/algosoft-lab/augur-git",
+          "label": "GitHub",
+          "type": "github"
+        }
+      ],
+      "markdown": "augur-git/augur-git.md",
+      "technologies": [
+        "Rust",
+        "Tauri 2",
+        "React",
+        "TypeScript",
+        "Zustand",
+        "Git"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "featured": false,
+      "id": "streamfile-server",
+      "index": "05",
+      "links": [
+        {
+          "href": "https://github.com/lihaozhe013/streamfile-server-nodejs",
+          "label": "GitHub",
+          "type": "github"
+        }
+      ],
+      "markdown": "streamfile-server/streamfile-server.md",
+      "technologies": [
+        "TypeScript",
+        "Bun",
+        "Express",
+        "React",
+        "Vite",
+        "Video.js",
+        "Docker"
       ]
     },
     {
       "category": "game",
       "featured": false,
       "id": "battle-royal-moba",
-      "index": "04",
+      "index": "06",
       "links": [
         {
           "href": "https://github.com/lihaozhe013/battle-royale-moba-godot",
@@ -94,47 +189,35 @@
       "technologies": ["Godot", "C++", "GDScript"]
     },
     {
-      "category": "software",
-      "featured": true,
-      "id": "tradeflow-system",
-      "index": "02",
+      "category": "deep-learning",
+      "featured": false,
+      "id": "license-plate-recognition",
+      "index": "07",
       "links": [
         {
-          "href": "https://lihaozhe013.github.io/lihaozhe-website/posts/tradeflow-system/",
-          "label": "Detail",
-          "type": "external"
-        },
-        {
-          "href": "https://github.com/lihaozhe013/tradeflow-oss",
+          "href": "https://github.com/lihaozhe013/APS360-Project-License-Plate-Recognition",
           "label": "GitHub",
           "type": "github"
+        },
+        {
+          "href": "https://lihaozhe013.github.io/lihaozhe-website/portfolio/APS360_Project_Final_Report.pdf",
+          "label": "Report",
+          "type": "external"
         }
       ],
-      "markdown": "tradeflow-system/tradeflow-system.md",
       "technologies": [
-        "TypeScript",
-        "React",
-        "Node.js",
-        "PostgreSQL",
-        "Express",
-        "Decimal.js",
-        "Sheet.js",
-        "JSONWebToken",
-        "Vite",
-        "Tailwind CSS",
-        "Ant Design",
-        "Docker",
-        "Docker Compose",
-        "AWS",
-        "GitHub Actions",
-        "Argo CD"
+        "PyTorch",
+        "Python",
+        "jinja2",
+        "playwright",
+        "albumentations"
       ]
     },
     {
       "category": "algorithms",
       "featured": false,
       "id": "gis-route-optimization",
-      "index": "06",
+      "index": "08",
       "links": [
         {
           "href": "https://lihaozhe013.github.io/lihaozhe-website/portfolio/ECE297-OP2.pdf",
@@ -160,51 +243,10 @@
       ]
     },
     {
-      "category": "software",
-      "featured": true,
-      "id": "aio-asset-normalizer",
-      "index": "01",
-      "cover": "assets/editorial-cover.png",
-      "links": [
-        {
-          "href": "https://github.com/lihaozhe013/aio-asset-normalizer",
-          "label": "GitHub",
-          "type": "github"
-        }
-      ],
-      "markdown": "aio-asset-normalizer/aio-asset-normalizer.md",
-      "technologies": ["Rust", "egui", "three-d", "wgpu", "gltf"]
-    },
-    {
-      "category": "deep-learning",
-      "featured": false,
-      "id": "license-plate-recognition",
-      "index": "05",
-      "links": [
-        {
-          "href": "https://github.com/lihaozhe013/APS360-Project-License-Plate-Recognition",
-          "label": "GitHub",
-          "type": "github"
-        },
-        {
-          "href": "https://lihaozhe013.github.io/lihaozhe-website/portfolio/APS360_Project_Final_Report.pdf",
-          "label": "Report",
-          "type": "external"
-        }
-      ],
-      "technologies": [
-        "PyTorch",
-        "Python",
-        "jinja2",
-        "playwright",
-        "albumentations"
-      ]
-    },
-    {
       "category": "embedded",
       "featured": false,
       "id": "dinosaur-game",
-      "index": "07",
+      "index": "09",
       "links": [
         {
           "href": "https://youtu.be/_ZocQdUdjPw?si=gIY0hTswSoknH1XM",
@@ -231,7 +273,7 @@
       "category": "embedded",
       "featured": false,
       "id": "runner-game",
-      "index": "08",
+      "index": "10",
       "links": [
         {
           "href": "https://github.com/lihaozhe013/ece243_runner_game",
@@ -280,7 +322,10 @@
         "Unity Engine",
         "Makefile",
         "Figma",
-        "Notion"
+        "Notion",
+        "egui",
+        "Tauri",
+        "Blender"
       ]
     },
     {
@@ -302,11 +347,15 @@
         "React",
         "Three.js",
         "FastAPI",
-        "React",
         "PostgreSQL",
         "Nginx",
         "GitHub Actions",
-        "Docker"
+        "Docker",
+        "Electron",
+        "Bun",
+        "Prisma",
+        "SQLite",
+        "MCP"
       ]
     }
   ]

@@ -1,170 +1,111 @@
-# AIO Asset Normalizer
+AIO Asset Normalizer is a Rust desktop application and headless CLI for
+preparing 3D assets for games. It brings model inspection, GLB editing,
+animation cleanup, and motion retargeting into one pipeline, with explicit
+export contracts rather than a collection of unrelated conversion scripts.
 
-_A pure-Rust GLB editor and BVH motion retargeting tool — portfolio showcase_
+The core GLB and BVH workflows run in Rust. A separate FBX Converter page uses a
+local Blender installation for FBX, OBJ, and Blend inputs; Blender is not
+required for the GLB Editor, BVH Studio, or their CLI equivalents.
 
-Welcome to my portfolio page for **AIO Asset Normalizer**, a desktop application
-that helps indie game developers and independent creators standardize `.glb` 3D
-assets. The tool is written entirely in Rust, runs without Blender or any
-external conversion pipeline, and is built around a clear, user-confirmed
-standardization contract.
+## From Source Asset to Game Asset
 
-## Project Overview
+A typical workflow starts with inspecting a character's scene, Skin, materials,
+and animation channels. The user can correct its orientation, review playback,
+trim a clip, replace textures, and export a normalized GLB. Motion from another
+skeleton goes through an explicit mapping and target preview before export.
 
-AIO Asset Normalizer began as a Blender-dependent multi-format converter and has
-been completely redesigned into a focused desktop tool for `.glb` assets. The
-current product provides:
+| Workspace     | Implemented workflow                                                                                                 |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| GLB Editor    | Inspect models and skeletons, play animation, edit export settings, replace PBR textures, and retarget GLB animation |
+| BVH Studio    | Inspect and trim motion capture, map joints, preview a target Skin, and export retargeted motion                     |
+| FBX Converter | Select authoring files and convert them sequentially through a headless Blender process                              |
+| Headless CLI  | Inspect, validate, dry-run, and execute asset jobs with structured JSON results                                      |
 
-- GLB editing, preview, and standardized export
-- Animation clip playback, timeline controls, trimming, and export
-- Mesh material and PBR texture replacement
-- BVH playback, trimming, generic skeleton mapping, and GLB animation export
-- Reusable Mapping files for different motion-capture systems and character
-  models
-- CLI mode for scripting batch operations on large volumes of similar assets
+## GLB Editing and Animation
 
-What makes the project stand out is the engineering approach: the entire GLB
-loading, editing, animation processing, and export pipeline is implemented in
-Rust, while the existing `egui` + `three-d` foundation provides the window, 3D
-canvas, orbit camera, axes, grid, and skeleton visualization.
+The editor exposes scenes, nodes, meshes, materials, Skins, and animation clips.
+Its viewport supports CPU-skinned playback and skeleton overlays, including
+meshless animation GLBs. Playback includes seeking, frame stepping, looping, and
+speed controls. Animation sampling supports STEP and LINEAR channels.
 
-## Screenshots
+Orientation presets handle common up-axis conventions, with Euler input for
+precise corrections. Export options control unit scaling, centering, grounding,
+and whether corrections are baked into the file or remain preview-only.
+Animation trimming also operates on the export copy rather than rewriting the
+loaded source.
 
-![GLB Editor main view](assets/glb-editor-main.png)
+Smart LOOP closes small capture drift with an adjustable transition. It rejects
+significant Root Motion instead of silently turning a moving animation into an
+in-place clip. Its current processing contract is LINEAR translation, rotation,
+and scale channels on a single Skin.
 
-![Export Options](assets/detailed-right-panel.png)
+Material editing covers Base Color, Normal, Metallic-Roughness, Occlusion, and
+Emissive textures. Shared-material duplication allows a change to be isolated
+rather than unexpectedly affecting every mesh that uses the same material.
 
-## Design Goals
+## One Mapping Contract for Two Motion Sources
 
-The project follows a few core principles:
+BVH-to-GLB and GLB-to-GLB retargeting share Mapping v2. A mapping identifies the
+source and target skeletons, coordinate conventions, units, roots, selected GLB
+Skins, and individual bone correspondences. Nodes use names, hierarchy paths,
+and indices so duplicate names do not collapse into an ambiguous match.
 
-- **GLB only.** glTF 2.0 Binary (`.glb`) is the single supported format; FBX,
-  OBJ, Blend, and other source formats are out of scope.
-- **No external dependencies at runtime.** No Blender, no Blender API, and no
-  external conversion process.
-- **Pure-Rust pipeline.** GLB loading, editing, animation processing, and export
-  are all implemented in Rust.
-- **Decoupled architecture.** UI, GLB document processing, BVH algorithms, and
-  rendering stay separate; expensive work runs in background tasks and
-  communicates through message passing.
-- **Safe exports.** Source files are never overwritten by default; exports use
-  temporary files and atomic replacement.
-- **Honest error handling.** Unsupported features such as Draco, Meshopt,
-  CUBICSPLINE, or Morph Target clips are reported explicitly instead of silently
-  producing corrupted files.
+File and skeleton fingerprints help validate the mapping against its inputs.
+Name matching generates suggestions for review; the saved mapping remains the
+source of truth. Older Mapping v1 files remain readable for BVH Studio and can
+be converted when joint names are unique.
 
-## GLB Editor
+The retargeting pipeline uses authored rest-pose deltas. Source and target
+skeleton overlays make the result inspectable before writing a file, while
+optional Root Motion, initial-heading normalization, and redundant-key reduction
+control how the motion is packaged. Octahedral, Stick, and Lines displays share
+stable rest-pose sizing and adaptive camera fitting.
 
-The main page edits existing GLB files instead of converting between formats.
+Export can produce a Character Package containing geometry and animation, or an
+Animation Clip containing the skeleton and motion. An external-agent prompt
+handoff supports mapping work without embedding a coding agent in the
+application.
 
-- Load, inspect, and preview scenes, nodes, meshes, materials, skins, skeletons,
-  and animations
-- Play standard GLB node and skinned-mesh animations with pause, looping, speed,
-  seeking, and frame stepping
-- Support `STEP` and `LINEAR` animation sampling; report unsupported
-  `CUBICSPLINE` and Morph Target clips explicitly
-- Adjust model orientation with XYZ `±90°` shortcuts and precise Euler input
-- Trim animation clips by start and end time and rebuild the timeline
-- Replace Base Color, Normal, Metallic-Roughness, Occlusion, and Emissive
-  textures
-- Reserve extension points for future skeleton and mesh replacement
-- Export game-ready GLBs with consistent coordinates, units, grounding, and
-  facing
+## Shared Desktop and CLI Domain
 
-## BVH Studio
-
-BVH processing lives on an independent page. It takes a BVH file, a target GLB,
-and a Mapping file, then lets you:
-
-- Play and inspect BVH motion frame by frame
-- Trim and save BVH files
-- Retarget BVH motion to any target skinned GLB that satisfies the input
-  contract
-- Export a Character Package containing a character and animation
-- Export an Animation Clip containing only the skeleton and animation
-- Use explicit Mapping files to support different motion-capture systems and
-  character naming conventions
-
-The Mapping file is the single source of truth for retargeting. Automatic name
-matching only produces suggestions; the user must confirm them before export.
-The initial format is versioned JSON:
-
-```json
-{
-  "schema_version": 1,
-  "source": {
-    "up_axis": "Y",
-    "forward_axis": "-Z",
-    "unit": "cm",
-    "root": "Hips"
-  },
-  "target": {
-    "skin": "Armature",
-    "root": "pelvis"
-  },
-  "bones": [
-    {
-      "source_joint": "Hips",
-      "target_node": "pelvis",
-      "rotation_offset_xyzw": [0.0, 0.0, 0.0, 1.0]
-    }
-  ]
-}
+```mermaid
+flowchart TD
+    UI[Desktop workspace] --> OPS[Shared asset operations]
+    CLI[Headless JSON CLI] --> OPS
+    OPS --> GLB[GLB document and animation pipeline]
+    OPS --> BVH[BVH parsing and motion retargeting]
+    OPS --> CONV[Blender conversion subprocess]
+    GLB --> CHECK[Validation and staged export]
+    BVH --> CHECK
+    CONV --> CHECK
+    CHECK --> OUT[GLB or BVH output]
 ```
 
-The target-model contract requires a conventional glTF Skin with valid
-`JOINTS_0`, `WEIGHTS_0`, and inverse bind matrices. Fixed company models, fixed
-skeleton sizes, fixed N-Pose assumptions, serial protocols, and IMU logic are
-intentionally kept out of this generic tool.
+The document layer retains raw GLB JSON and binary data, changing affected
+resources where possible. This preserves unknown extensions and extras without
+requiring the editor to reconstruct every part of an asset. Exports are staged
+beside the destination, reparsed where applicable, and atomically committed;
+source overwrite is not the default.
 
-## Standardization Contract
+Expensive work runs on background workers and returns results through message
+passing. The CLI reuses those domain operations and emits a versioned JSON
+envelope, with diagnostics on stderr and distinct exit codes for usage,
+validation, I/O, and external-tool failures. A CLI-only build excludes the
+desktop dependency stack.
 
-The default export contract produces consistent, game-ready assets:
+## Implementation Boundaries
 
-- Right-handed coordinates
-- Y-Up
-- Model forward direction `-Z`
-- Meter-based output by default
-- Bounding box centered on the XZ plane
-- Lowest point placed at `Y = 0`
-- Identity scene-root transform
-- Orientation, scale, skin, inverse bind matrices, and root animation baked
-  together
+The viewport uses egui through three-d, with gltf for asset loading and
+validation, image for texture processing, and Clap for the CLI. The converter
+invokes an embedded normalization script in Blender and checks generated GLBs
+before reporting success.
 
-Grounding, centering, and unit scaling can be disabled or adjusted in the export
-options.
+CUBICSPLINE sampling, Morph Target playback, GPU skinning, mesh-weight
+rebinding, IK/Twist processing, and skeleton replacement are outside the current
+feature set. Compressed geometry may be preserved when its skeleton and
+animation can be validated, even when it cannot be previewed. Operations that
+require unsafe rewriting report the unsupported case.
 
-## Technology Stack
-
-| Layer                      | Technology                                                |
-| -------------------------- | --------------------------------------------------------- |
-| GUI                        | `egui` through `three-d`                                  |
-| 3D viewport                | `three-d` / `wgpu`                                        |
-| GLB loading and validation | `gltf`                                                    |
-| GLB document editing       | Preserve raw JSON + BIN; use `gltf-json` when appropriate |
-| Image processing           | Rust `image` ecosystem                                    |
-| Background tasks           | `std::sync::mpsc` + worker threads                        |
-| File dialogs               | `rfd`                                                     |
-
-The GLB read/write layer preserves the original JSON and BIN data and changes
-only affected resources wherever possible. This helps retain unknown extensions,
-`extras`, and the original resource layout.
-
-## Engineering Highlights
-
-- **Owning the pipeline in Rust.** With no Blender bridge, GLB parsing, document
-  editing, animation baking, and export are all implemented and tested in one
-  language.
-- **Safe atomic writes.** Every export goes through a temporary file and is
-  reparse-validated before replacing the destination, so source files stay
-  intact.
-- **Decoupled background processing.** Heavy document and BVH work runs on
-  worker threads and communicates with the UI through message passing, keeping
-  the interface responsive.
-- **A reusable retargeting contract.** Versioned Mapping files decouple
-  motion-capture source conventions from target character naming, making the
-  tool work across different capture systems and models.
-- **Explicit extension handling.** Features that cannot be safely processed are
-  reported instead of corrupted silently.
-- **CLI mode for batch scripting.** The project provides a CLI mode that enables
-  writing scripts for batch processing of large volumes of similar assets,
-  supporting automation of repetitive workflows.
+The engineering focus is a reusable asset-processing core: the desktop provides
+visual inspection, while the CLI makes the same contracts available to scripts
+and coding agents.

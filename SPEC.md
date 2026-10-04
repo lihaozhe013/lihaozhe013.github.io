@@ -29,10 +29,10 @@ alongside the owner's name. The portrait remains on About.
 - Home places a two-line name, identity, introduction, and links at left. A
   dedicated ink artwork sits at right with a translated caption. Selected work
   retains project numbering: AIO Asset Normalizer is the large visual feature;
-  TradeFlow and Docmost are supporting text entries. Clicking artwork or a title
-  opens the existing preview dialog. A separate details link goes to the full
-  project page. The page closes with the existing personal introduction and a
-  shared contact footer.
+  TradeFlow and Geared Term are supporting text entries. Clicking artwork or a
+  title opens the existing preview dialog. A separate details link goes to the
+  full project page. The page closes with the existing personal introduction and
+  a shared contact footer.
 - About pairs the grayscale portrait and introduction, followed by text-based
   skills and education. On narrow screens it orders the title, image,
   introduction, skills, and education vertically.
